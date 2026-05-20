@@ -19,14 +19,14 @@ class ProductoManager {
     // Parte A: Operaciones con Map
 
     fun obtenerNombres(productos: List<Producto>): List<String> {
-        TODO("Implementar: Debe retornar una lista con solo los nombres de los productos")
+        return productos.map{it.nombre}
     }
 
     fun aplicarDescuento(
         productos: List<Producto>,
         descuentoPorcentaje: Double,
     ): List<Double> {
-        TODO("Implementar: Debe retornar una lista con los precios después de aplicar el descuento")
+        return productos.map {producto -> producto.precio - (producto.precio * descuentoPorcentaje/100)}
     }
 
     fun generarEtiquetas(productos: List<Producto>): List<String> {
