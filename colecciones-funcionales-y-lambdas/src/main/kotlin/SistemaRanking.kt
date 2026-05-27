@@ -21,25 +21,31 @@ class SistemaRanking {
     // Parte A: Ordenamiento Simple con sortBy
     
     fun ordenarPorSalario(empleados: List<Empleado>): List<Empleado> {
-        TODO("Implementar: Debe ordenar empleados por salario de menor a mayor")
+        val ordenados = empleados.sortedBy { it.salario }
+        return ordenados
     }
     
     fun ordenarPorExperienciaDesc(empleados: List<Empleado>): List<Empleado> {
-        TODO("Implementar: Debe ordenar por años de experiencia de mayor a menor")
+        val orden = empleados.sortedByDescending { it.anosExperiencia }
+        return orden
     }
     
     fun ordenarPorNombre(empleados: List<Empleado>): List<Empleado> {
-        TODO("Implementar: Debe ordenar alfabéticamente por nombre")
+        val orden = empleados.sortedBy { it.nombre }
+        return orden
     }
     
     // Parte B: Lambdas Complejas
     
     fun ordenarPorEficiencia(empleados: List<Empleado>): List<Empleado> {
-        TODO("Implementar: Debe ordenar por eficiencia (proyectosCompletados / añosExperiencia) descendente")
+        val orden = empleados.sortedByDescending { it.proyectosCompletados / it.anosExperiencia }
+        return orden
     }
     
     fun ordenarPorPuntuacionCompuesta(empleados: List<Empleado>): List<Empleado> {
-        TODO("Implementar: Debe ordenar por puntuación = (evaluacionDesempeño * 2) + (proyectosCompletados * 0.1) descendente")
+        val orden = empleados.sortedByDescending {
+            (it.evaluacionDesempeno*2) + (it.proyectosCompletados * 0.1) }
+        return orden
     }
     
     fun ordenarITPrimero(empleados: List<Empleado>): List<Empleado> {

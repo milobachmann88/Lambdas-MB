@@ -26,81 +26,82 @@ class GestorTareas {
     // Parte A: Operaciones con Find
 
     fun encontrarPrimeraTareaUrgente(tareas: List<Tarea>): Tarea? {
-        TODO("Implementar: Debe encontrar la primera tarea con prioridad 3")
+        return tareas.find {it.prioridad == 3}
     }
 
     fun buscarPorId(
         tareas: List<Tarea>,
         id: Int,
     ): Tarea? {
-        TODO("Implementar: Debe encontrar la tarea con el ID especificado")
+        return tareas.find { it.id == id }
     }
 
     fun encontrarTareaPendienteConEtiqueta(
         tareas: List<Tarea>,
         etiqueta: String,
     ): Tarea? {
-        TODO("Implementar: Debe encontrar la primera tarea no completada con la etiqueta especificada")
+        return tareas.find { tarea ->
+            !tarea.completada && tarea.etiquetas.contains(etiqueta)
+        }
     }
 
     // Parte B: Operaciones con Any
 
     fun hayTareasUrgentesPendientes(tareas: List<Tarea>): Boolean {
-        TODO("Implementar: Debe verificar si hay alguna tarea urgente (prioridad 3) sin completar")
+        return tareas.any {it.prioridad == 3 && !it.completada}
     }
 
     fun hayTareasQueSuperanHoras(
         tareas: List<Tarea>,
         horasLimite: Int,
     ): Boolean {
-        TODO("Implementar: Debe verificar si alguna tarea supera el límite de horas especificado")
+        return tareas.any{it.tiempoEstimadoHoras > horasLimite}
     }
 
     fun existeTareaConEtiqueta(
         tareas: List<Tarea>,
         etiqueta: String,
     ): Boolean {
-        TODO("Implementar: Debe verificar si existe alguna tarea con la etiqueta especificada")
+        return tareas.any { it.etiquetas.contains(etiqueta) }
     }
 
     // Parte C: Operaciones con All
 
     fun todasCompletadas(tareas: List<Tarea>): Boolean {
-        TODO("Implementar: Debe verificar si todas las tareas están completadas")
+        return tareas.all { it.completada }
     }
 
     fun todasTienenEtiquetas(tareas: List<Tarea>): Boolean {
-        TODO("Implementar: Debe verificar si todas las tareas tienen al menos una etiqueta")
+        return tareas.all { it.etiquetas.size >= 1 }
     }
 
     fun todasDentroDeHoras(
         tareas: List<Tarea>,
         horasMaximo: Int,
     ): Boolean {
-        TODO("Implementar: Debe verificar si todas las tareas están dentro del límite de horas")
+        return tareas.all { it.tiempoEstimadoHoras < horasMaximo }
     }
 
     // Parte D: Combinación de Find, Any y All
 
     fun proyectoListoParaEntrega(tareas: List<Tarea>): Boolean {
-        TODO(
-            """
-            Implementar: Un proyecto está listo si:
-            - Todas las tareas de prioridad alta (3) están completadas
-            - No hay ninguna tarea pendiente con etiqueta "blocker"
-            - Existe al menos una tarea de documentación completada
-        """,
-        )
+        val prioridadAlta = tareas.all { if (it.prioridad == 3) it.completada else true}
+            val noBlockers = !tareas.any { !it.completada && it.etiquetas.contains("blocker")}
+                val documentacion = tareas.find { it.completada && it.etiquetas.contains("docs")}!= null
+        return prioridadAlta && noBlockers && documentacion
     }
 
     fun generarResumenEstado(tareas: List<Tarea>): EstadoProyecto {
-        TODO(
-            """
-            Implementar: Debe generar un resumen con:
-            - hayTareasCriticasPendientes: si hay tareas de prioridad 3 sin completar
-            - totalHorasPendientes: suma de horas de tareas no completadas
-            - todosLosBugsResueltos: si todas las tareas con etiqueta "bug" están completadas
-        """,
+        val hayTareasCriticasPendientes= tareas.any{ it.prioridad == 3 && !it.completada}
+        val totalHorasPendientes= tareas
+            .filter { !it.completada }
+            .sumOf { it.tiempoEstimadoHoras }
+        val todosLosBugsResueltos= tareas.all { if (it.etiquetas.contains("bug")) it.completada else true }
+
+        return EstadoProyecto(
+            hayTareasCriticasPendientes= hayTareasCriticasPendientes,
+            totalHorasPendientes= totalHorasPendientes,
+            todosLosBugsResueltos= todosLosBugsResueltos
         )
     }
 }
