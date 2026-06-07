@@ -17,81 +17,88 @@ data class Empleado(
     val proyectosCompletados: Int
 )
 class SistemaRanking {
-    
+
     // Parte A: Ordenamiento Simple con sortBy
-    
+
     fun ordenarPorSalario(empleados: List<Empleado>): List<Empleado> {
         val ordenados = empleados.sortedBy { it.salario }
         return ordenados
     }
-    
+
     fun ordenarPorExperienciaDesc(empleados: List<Empleado>): List<Empleado> {
         val orden = empleados.sortedByDescending { it.anosExperiencia }
         return orden
     }
-    
+
     fun ordenarPorNombre(empleados: List<Empleado>): List<Empleado> {
         val orden = empleados.sortedBy { it.nombre }
         return orden
     }
-    
+
     // Parte B: Lambdas Complejas
-    
+
     fun ordenarPorEficiencia(empleados: List<Empleado>): List<Empleado> {
         val orden = empleados.sortedByDescending { it.proyectosCompletados / it.anosExperiencia }
         return orden
     }
-    
+
     fun ordenarPorPuntuacionCompuesta(empleados: List<Empleado>): List<Empleado> {
         val orden = empleados.sortedByDescending {
-            (it.evaluacionDesempeno*2) + (it.proyectosCompletados * 0.1) }
+            (it.evaluacionDesempeno * 2) + (it.proyectosCompletados * 0.1)
+        }
         return orden
     }
-    
+
     fun ordenarITPrimero(empleados: List<Empleado>): List<Empleado> {
-        TODO("Implementar: Debe ordenar con empleados de IT primero, luego por salario ascendente")
+        val orden = empleados.sortedBy {
+            (it.salario)
+        }.sortedByDescending {
+            (it.departamento == "IT")
+        }
+        return orden
     }
-    
+
     // Parte C: Ordenamiento Múltiple
-    
+
     fun ordenarPorDepartamentoYSalario(empleados: List<Empleado>): List<Empleado> {
-        TODO("""
-            Implementar: Debe ordenar por:
-            1) Departamento alfabéticamente
-            2) Dentro del mismo departamento, por salario descendente
-            3) Si mismo departamento y salario, por experiencia ascendente
-        """)
+        val orden = empleados.sortedBy {
+            (it.anosExperiencia)
+        }.sortedBy {
+            (it.salario)
+        }.sortedBy {
+            (it.departamento)
+        }
+        return orden
     }
-    
+
     fun ordenarSegunSeniority(empleados: List<Empleado>): List<Empleado> {
-        TODO("""
-            Implementar: 
-            - Juniors (experiencia < 5): ordenar por evaluación descendente
-            - Seniors (experiencia >= 5): ordenar por proyectos completados descendente
-            - Mantener juniors antes que seniors en la lista final
-        """)
+        val juniors = empleados.filter { it.anosExperiencia < 5 }.sortedByDescending {
+            (it.evaluacionDesempeno)
+        }
+        val seniors = empleados.filter { it.anosExperiencia >= 5 }.sortedByDescending {
+            (it.proyectosCompletados)
+        }
+        val orden = juniors + seniors
+        return orden
     }
-    
+
     // Parte D: Lambdas como Parámetros de Configuración
-    
+
     fun <T : Comparable<T>> ordenarConEstrategia(
         empleados: List<Empleado>,
         estrategia: (Empleado) -> T
     ): List<Empleado> {
-        TODO("Implementar: Debe ordenar usando la estrategia proporcionada descendentemente")
+        return empleados.sortedByDescending { empleado -> estrategia(empleado) }
     }
-    
+
     fun obtenerTopEmpleados(
         empleados: List<Empleado>,
         filtro: (Empleado) -> Boolean,
         ordenamiento: (Empleado) -> Double,
         limite: Int
     ): List<Empleado> {
-        TODO("""
-            Implementar: 
-            1) Filtrar empleados según el predicado
-            2) Ordenar por el criterio dado (descendente)
-            3) Tomar solo los primeros 'limite' empleados
-        """)
+        val filtrados = empleados.filter(filtro)
+        val ordenados = filtrados.sortedByDescending { empleado -> ordenamiento(empleado) }
+        return ordenados.take(limite)
     }
 }
